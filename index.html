@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Downloader - Designed by Talha Ansari</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    body {
+      background: #0f172a;
+      color: #f8fafc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    .logo {
+      font-size: 2.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .designer-tag {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin-top: 6px;
+      letter-spacing: 0.5px;
+    }
+    .designer-name {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+    .container {
+      width: 100%;
+      max-width: 650px;
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      border: 1px solid #334155;
+    }
+    .platform-icons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 25px;
+      font-size: 1.8rem;
+    }
+    .platform-icons .fa-youtube { color: #ff0000; }
+    .platform-icons .fa-tiktok { color: #00f2fe; }
+    .platform-icons .fa-instagram { color: #e1306c; }
+    
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid #475569;
+      background: #0f172a;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus {
+      border-color: #3b82f6;
+    }
+    button.btn-fetch {
+      padding: 14px 24px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button.btn-fetch:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .loader {
+      display: none;
+      text-align: center;
+      margin: 20px 0;
+      color: #94a3b8;
+    }
+    .loader i {
+      font-size: 2rem;
+      animation: spin 1s linear infinite;
+      color: #38bdf8;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .result-card {
+      display: none;
+      margin-top: 25px;
+      background: #0f172a;
+      padding: 20px;
+      border-radius: 16px;
+      border: 1px solid #334155;
+    }
+    .video-thumb {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      object-fit: cover;
+      max-height: 320px;
+    }
+    .video-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #f1f5f9;
+      line-height: 1.4;
+    }
+    .download-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .dl-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #22c55e;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    .dl-btn:hover {
+      background: #16a34a;
+    }
+    .dl-btn.audio-btn {
+      background: #eab308;
+      color: #000;
+    }
+    .dl-btn.audio-btn:hover {
+      background: #ca8a04;
+    }
+    footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      color: #64748b;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      <i class="fa-solid fa-cloud-arrow-down"></i> Media Downloader
+    </div>
+    <div class="designer-tag">Designed by <span class="designer-name">Talha Ansari</span></div>
+  </header>
+
+  <div class="container">
+    <div class="platform-icons">
+      <i class="fa-brands fa-youtube" title="YouTube"></i>
+      <i class="fa-brands fa-tiktok" title="TikTok"></i>
+      <i class="fa-brands fa-instagram" title="Instagram"></i>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="videoUrl" placeholder="Paste YouTube or TikTok link here..." />
+      <button class="btn-fetch" onclick="fetchVideo()">
+        <i class="fa-solid fa-magnifying-glass"></i> Fetch
+      </button>
+    </div>
+
+    <div class="loader" id="loader">
+      <i class="fa-solid fa-circle-notch"></i>
+      <p style="margin-top: 10px;">Processing link...</p>
+    </div>
+
+    <div class="result-card" id="resultCard">
+      <img id="thumbImg" class="video-thumb" src="" alt="Thumbnail">
+      <div class="video-title" id="videoTitle">Video Title Here</div>
+      <div class="download-btns">
+        <a id="downloadVideoBtn" class="dl-btn" href="#" target="_blank" download>
+          <i class="fa-solid fa-download"></i> Download Video (HD)
+        </a>
+        <a id="downloadAudioBtn" class="dl-btn audio-btn" href="#" target="_blank" download>
+          <i class="fa-solid fa-music"></i> Download Audio (MP3)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    &copy; 2026 Media Downloader. Designed by Talha Ansari. All rights reserved.
+  </footer>
+
+  <script>
+    async function fetchVideo() {
+      const url = document.getElementById('videoUrl').value.trim();
+      const loader = document.getElementById('loader');
+      const resultCard = document.getElementById('resultCard');
+
+      if (!url) {
+        alert('Kripya ek valid video link paste karein!');
+        return;
+      }
+
+      loader.style.display = 'block';
+      resultCard.style.display = 'none';
+
+      try {
+        // Cobalt API Integration for Multi-Platform Media Downloading
+        const response = await fetch('https://api.cobalt.tools/api/json', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            url: url,
+            vQuality: '720'
+          })
+        });
+
+        const data = await response.json();
+
+        loader.style.display = 'none';
+
+        if (data.status === 'stream' || data.status === 'redirect') {
+          document.getElementById('videoTitle').innerText = 'Ready to Download';
+          document.getElementById('thumbImg').src = 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600&auto=format&fit=crop';
+          
+          const dlVideoBtn = document.getElementById('downloadVideoBtn');
+          dlVideoBtn.href = data.url;
+
+          const dlAudioBtn = document.getElementById('downloadAudioBtn');
+          dlAudioBtn.href = data.url;
+
+          resultCard.style.display = 'block';
+        } else if (data.status === 'picker') {
+          document.getElementById('videoTitle').innerText = 'Multiple items found';
+          document.getElementById('thumbImg').src = data.picker[0].thumb || 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=600&auto=format&fit=crop';
+          
+          document.getElementById('downloadVideoBtn').href = data.picker[0].url;
+          document.getElementById('downloadAudioBtn').href = data.picker[0].url;
+
+          resultCard.style.display = 'block';
+        } else {
+          alert('Video fetch karne mein masla hua. Kripya link check karke dobara try karein.');
+        }
+      } catch (error) {
+        loader.style.display = 'none';
+        alert('Server response mein issue aaya. Please dobara try karein.');
+      }
+    }
+  </script>
+</body>
+</html>
